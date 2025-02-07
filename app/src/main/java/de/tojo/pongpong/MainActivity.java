@@ -1,5 +1,6 @@
 package de.tojo.pongpong;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,9 +29,9 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
         startButton.setOnClickListener(this);
     }
 
-    //startet das Spiel
+    //startet die GameActivity
     @Override
     public void onClick(View view) {
-        // TODO: spiel muss gestartet werden
+        startActivity(new Intent(this, GameActivity.class));
     }
 }
