@@ -95,7 +95,7 @@ public class GameView extends View {
         canvas.drawRect(paddleUnten, paint);
         canvas.drawCircle(ball.cx, ball.cy, ball.radius, paint);
     }
-    
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         switch(event.getAction()) {
@@ -123,25 +123,7 @@ public class GameView extends View {
                 paddleRechts.offset(0, moveY);
                 paddleUnten.offset(moveX, 0);
 
-                // falls die Paddles über den Bildschirmrand hinausgezogen werden, werden sie in den
-                // nächsten vier ifs bzw. else ifs wieder an den Rand zurückgesetzt
-                if(paddleLinks.top < spielfeld.top) {
-                    paddleLinks.offsetTo(paddleLinks.left, spielfeld.top);
-                    paddleRechts.offsetTo(paddleRechts.left, spielfeld.top);
-                }
-                else if(paddleLinks.bottom > spielfeld.bottom) {
-                    paddleLinks.offsetTo(paddleLinks.left, spielfeld.bottom - paddleVertikalLaengeLangeSeite);
-                    paddleRechts.offsetTo(paddleRechts.left, spielfeld.bottom - paddleVertikalLaengeLangeSeite);
-                }
-
-                if(paddleOben.left < spielfeld.left) {
-                    paddleOben.offsetTo(spielfeld.left, paddleOben.top);
-                    paddleUnten.offsetTo(spielfeld.left, paddleUnten.top);
-                }
-                else if(paddleOben.right > spielfeld.right) {
-                    paddleOben.offsetTo(spielfeld.right - paddleHorizontalLaengeLangeSeite, paddleOben.top);
-                    paddleUnten.offsetTo(spielfeld.right - paddleHorizontalLaengeLangeSeite, paddleUnten.top);
-                }
+                paddlesImSpielfeldHalten();
 
                 invalidate();
                 return true;
@@ -197,5 +179,25 @@ public class GameView extends View {
     private void initBall() {
         float ballRadius = BALL_RADIUS_PROZENTUAL * spielfeld.width();
         ball.set(spielfeld.left + (spielfeld.width() / 2f), spielfeld.top + (spielfeld.height() / 2f), ballRadius);
+    }
+
+    private void paddlesImSpielfeldHalten() {
+        if(paddleLinks.top < spielfeld.top) {
+            paddleLinks.offsetTo(paddleLinks.left, spielfeld.top);
+            paddleRechts.offsetTo(paddleRechts.left, spielfeld.top);
+        }
+        else if(paddleLinks.bottom > spielfeld.bottom) {
+            paddleLinks.offsetTo(paddleLinks.left, spielfeld.bottom - paddleVertikalLaengeLangeSeite);
+            paddleRechts.offsetTo(paddleRechts.left, spielfeld.bottom - paddleVertikalLaengeLangeSeite);
+        }
+
+        if(paddleOben.left < spielfeld.left) {
+            paddleOben.offsetTo(spielfeld.left, paddleOben.top);
+            paddleUnten.offsetTo(spielfeld.left, paddleUnten.top);
+        }
+        else if(paddleOben.right > spielfeld.right) {
+            paddleOben.offsetTo(spielfeld.right - paddleHorizontalLaengeLangeSeite, paddleOben.top);
+            paddleUnten.offsetTo(spielfeld.right - paddleHorizontalLaengeLangeSeite, paddleUnten.top);
+        }
     }
 }
