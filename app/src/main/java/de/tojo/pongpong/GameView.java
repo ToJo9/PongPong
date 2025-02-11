@@ -19,8 +19,7 @@ public class GameView extends View {
     private static final float PADDLE_HORIZONTAL_LAENGE_KURZE_SEITE_PROZENTUAL = 0.005f;
     private static final float PADDLE_HORIZONTAL_LAENGE_LANGE_SEITE_PROZENTUAL = 0.22f;
     private static final float BALL_RADIUS_PROZENTUAL = 0.01f;
-    //TODO: abstände zum rand erhöhen, wegen umstellung auf spielfeld
-    private static final float ABSTAND_ZUM_RAND_HORIZONTAL_PROZENTUAL = 0.023f;
+    private static final float ABSTAND_ZUM_RAND_HORIZONTAL_PROZENTUAL = 0.026f;
     private static final float ABSTAND_ZUM_RAND_VERTIKAL_PROZENTUAL = 0.015f;
     private static final float PADDLE_VERTIKAL_GESCHWINDIGKEIT = 2.2f;
     private static final float PADDLE_HORIZONTAL_GESCHWINDIGKEIT = 2.5f;
