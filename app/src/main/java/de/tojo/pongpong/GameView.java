@@ -38,6 +38,8 @@ public class GameView extends View {
     private int paddleVertikalLaengeLangeSeite;
     private int paddleHorizontalLaengeKurzeSeite;
     private int paddleHorizontalLaengeLangeSeite;
+    private int abstandZumRandHorizontal;
+    private int abstandZumRandVertikal;
     private float lastTouchPosX;
     private float lastTouchPosY;
 
@@ -74,6 +76,7 @@ public class GameView extends View {
             }
         }
 
+        calcAbstandZumRand();
         initPaddles();
         initBall();
         invalidate();
@@ -117,6 +120,26 @@ public class GameView extends View {
                 paddleRechts.offset(0, moveY);
                 paddleUnten.offset(moveX, 0);
 
+                // falls die Paddles über den Bildschirmrand hinausgezogen werden, werden sie in den
+                // nächsten vier ifs bzw. else ifs wieder an den Rand zurückgesetzt
+                if(paddleLinks.top < benachrichtigungsleisteHeight + abstandZumRandVertikal) {
+                    paddleLinks.offsetTo(paddleLinks.left, benachrichtigungsleisteHeight + abstandZumRandVertikal);
+                    paddleRechts.offsetTo(paddleRechts.left, benachrichtigungsleisteHeight + abstandZumRandVertikal);
+                }
+                else if(paddleLinks.bottom > screenHeight - navigationsleisteHeight - abstandZumRandVertikal) {
+                    paddleLinks.offsetTo(paddleLinks.left, screenHeight - navigationsleisteHeight - abstandZumRandVertikal - paddleVertikalLaengeLangeSeite);
+                    paddleRechts.offsetTo(paddleRechts.left, screenHeight - navigationsleisteHeight - abstandZumRandVertikal - paddleVertikalLaengeLangeSeite);
+                }
+
+                if(paddleOben.left < abstandZumRandHorizontal) {
+                    paddleOben.offsetTo(abstandZumRandHorizontal, paddleOben.top);
+                    paddleUnten.offsetTo(abstandZumRandHorizontal, paddleUnten.top);
+                }
+                else if(paddleOben.right > screenWidth - abstandZumRandHorizontal) {
+                    paddleOben.offsetTo(screenWidth - abstandZumRandHorizontal - paddleHorizontalLaengeLangeSeite, paddleOben.top);
+                    paddleUnten.offsetTo(screenWidth - abstandZumRandHorizontal - paddleHorizontalLaengeLangeSeite, paddleUnten.top);
+                }
+
                 invalidate();
                 return true;
         }
@@ -129,14 +152,16 @@ public class GameView extends View {
         return super.performClick();
     }
 
+    private void calcAbstandZumRand() {
+        abstandZumRandHorizontal = (int) (ABSTAND_ZUM_RAND_HORIZONTAL_PROZENTUAL * screenWidth);
+        abstandZumRandVertikal = (int) (ABSTAND_ZUM_RAND_VERTIKAL_PROZENTUAL * screenHeightOhneLeisten);
+    }
+
     private void initPaddles() {
         paddleVertikalLaengeKurzeSeite = (int) (PADDLE_VERTIKAL_LAENGE_KURZE_SEITE_PROZENTUAL * screenWidth);
         paddleVertikalLaengeLangeSeite = (int) (PADDLE_VERTIKAL_LAENGE_LANGE_SEITE_PROZENTUAL * screenHeightOhneLeisten);
         paddleHorizontalLaengeKurzeSeite = (int) (PADDLE_HORIZONTAL_LAENGE_KURZE_SEITE_PROZENTUAL * screenHeightOhneLeisten);
         paddleHorizontalLaengeLangeSeite = (int) (PADDLE_HORIZONTAL_LAENGE_LANGE_SEITE_PROZENTUAL * screenWidth);
-
-        int abstandZumRandHorizontal = (int) (ABSTAND_ZUM_RAND_HORIZONTAL_PROZENTUAL * screenWidth);
-        int abstandZumRandVertikal = (int) (ABSTAND_ZUM_RAND_VERTIKAL_PROZENTUAL * screenHeightOhneLeisten);
 
         paddleLinks.set(
                 abstandZumRandHorizontal,
