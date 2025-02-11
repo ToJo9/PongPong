@@ -34,7 +34,7 @@ public class GameView extends View {
     private Paint paint;
     private Rect spielfeld;
     private Rect paddleLinks, paddleOben, paddleRechts, paddleUnten;
-    private Circle ball;
+    private Ball ball;
     private int paddleVertikalLaengeKurzeSeite;
     private int paddleVertikalLaengeLangeSeite;
     private int paddleHorizontalLaengeKurzeSeite;
@@ -55,7 +55,7 @@ public class GameView extends View {
         paddleOben = new Rect();
         paddleRechts = new Rect();
         paddleUnten = new Rect();
-        ball = new Circle();
+        ball = new Ball();
     }
 
     @Override
