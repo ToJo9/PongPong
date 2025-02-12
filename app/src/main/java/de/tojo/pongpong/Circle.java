@@ -15,7 +15,11 @@ public class Circle {
         this.radius = radius;
     }
 
-    //TODO: wahrscheinlich wird die offset()-Methode wie in Rect noch benötigt
+    public void offset(float cx, float cy, float radius) {
+        this.cx += cx;
+        this.cy += cy;
+        this.radius += radius;
+    }
 
     public void set(float cx, float cy, float radius) {
         this.cx = cx;

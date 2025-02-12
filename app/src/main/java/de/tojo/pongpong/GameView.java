@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
+import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
@@ -24,6 +25,7 @@ public class GameView extends View {
     private static final float PADDLE_VERTIKAL_GESCHWINDIGKEIT = 2.2f;
     private static final float PADDLE_HORIZONTAL_GESCHWINDIGKEIT = 2.5f;
 
+    private Handler handler = new Handler();
     private int screenWidth;
     private int screenHeight;
     private int screenHeightOhneLeisten;
@@ -43,6 +45,16 @@ public class GameView extends View {
     private int abstandZumRandVertikal;
     private float lastTouchPosX;
     private float lastTouchPosY;
+    private final Runnable moveBallRunnable = new Runnable() {
+        @Override
+        public void run() {
+            ball.move();
+
+            invalidate();
+
+            handler.postDelayed(moveBallRunnable, 16);
+        }
+    };
 
     public GameView(Context context) {
         super(context);
@@ -56,6 +68,7 @@ public class GameView extends View {
         paddleRechts = new Rect();
         paddleUnten = new Rect();
         ball = new Ball();
+        startGame();
     }
 
     @Override
@@ -134,6 +147,14 @@ public class GameView extends View {
     @Override
     public boolean performClick() {
         return super.performClick();
+    }
+
+    private void startGame() {
+        handler.post(moveBallRunnable);
+    }
+
+    private void endGame() {
+        handler.removeCallbacks(moveBallRunnable);
     }
 
     private void initSpielfeld() {
