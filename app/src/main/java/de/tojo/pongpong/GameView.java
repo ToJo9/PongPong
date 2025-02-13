@@ -157,6 +157,15 @@ public class GameView extends View {
         isRunning = true;
     }
 
+    // wird benötigt, weil die Paddles und der Ball vor dem Neustart erst wieder zurückgesetzt
+    // werden müssen
+    private void restartGame() {
+        initPaddles();
+        initBall();
+        invalidate();
+        startGame();
+    }
+
     private void endGame() {
         handler.removeCallbacks(moveBallRunnable);
         isRunning = false;
