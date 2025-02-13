@@ -62,13 +62,6 @@ public class GameView extends View {
 
         paint = new Paint();
         paint.setColor(Color.WHITE);
-
-        spielfeld = new Rect();
-        paddleLinks = new Rect();
-        paddleOben = new Rect();
-        paddleRechts = new Rect();
-        paddleUnten = new Rect();
-        ball = new Ball();
     }
 
     @Override
@@ -175,7 +168,7 @@ public class GameView extends View {
         abstandZumRandHorizontal = (int) (ABSTAND_ZUM_RAND_HORIZONTAL_PROZENTUAL * screenWidth);
         abstandZumRandVertikal = (int) (ABSTAND_ZUM_RAND_VERTIKAL_PROZENTUAL * screenHeightOhneLeisten);
 
-        spielfeld.set(
+        spielfeld = new Rect(
                 abstandZumRandHorizontal,
                 benachrichtigungsleisteHeight + abstandZumRandVertikal,
                 screenWidth - abstandZumRandHorizontal,
@@ -188,22 +181,22 @@ public class GameView extends View {
         paddleHorizontalLaengeKurzeSeite = (int) (PADDLE_HORIZONTAL_LAENGE_KURZE_SEITE_PROZENTUAL * spielfeld.height());
         paddleHorizontalLaengeLangeSeite = (int) (PADDLE_HORIZONTAL_LAENGE_LANGE_SEITE_PROZENTUAL * spielfeld.width());
 
-        paddleLinks.set(
+        paddleLinks = new Rect(
                 spielfeld.left - paddleVertikalLaengeKurzeSeite,
                 spielfeld.top + (spielfeld.height() / 2) - (paddleVertikalLaengeLangeSeite / 2),
                 spielfeld.left,
                 spielfeld.bottom - (spielfeld.height() / 2) + (paddleVertikalLaengeLangeSeite / 2));
-        paddleOben.set(
+        paddleOben = new Rect(
                 spielfeld.left + (spielfeld.width() / 2) - (paddleHorizontalLaengeLangeSeite / 2),
                 spielfeld.top - paddleHorizontalLaengeKurzeSeite,
                 spielfeld.right - (spielfeld.width() / 2) + (paddleHorizontalLaengeLangeSeite / 2),
                 spielfeld.top);
-        paddleRechts.set(
+        paddleRechts = new Rect(
                 spielfeld.right,
                 spielfeld.top + (spielfeld.height() / 2) - (paddleVertikalLaengeLangeSeite / 2),
                 spielfeld.right + paddleVertikalLaengeKurzeSeite,
                 spielfeld.bottom - (spielfeld.height() / 2) + (paddleVertikalLaengeLangeSeite / 2));
-        paddleUnten.set(
+        paddleUnten = new Rect(
                 spielfeld.left + (spielfeld.width() / 2) - (paddleHorizontalLaengeLangeSeite / 2),
                 spielfeld.bottom,
                 spielfeld.right - (spielfeld.width() / 2) + (paddleHorizontalLaengeLangeSeite / 2),
@@ -212,7 +205,7 @@ public class GameView extends View {
 
     private void initBall() {
         float ballRadius = BALL_RADIUS_PROZENTUAL * spielfeld.width();
-        ball.set(spielfeld.left + (spielfeld.width() / 2f), spielfeld.top + (spielfeld.height() / 2f), ballRadius);
+        ball = new Ball(spielfeld.left + (spielfeld.width() / 2f), spielfeld.top + (spielfeld.height() / 2f), ballRadius);
     }
 
     private void paddlesImSpielfeldHalten() {
