@@ -25,6 +25,7 @@ public class GameView extends View {
     private static final float PADDLE_VERTIKAL_GESCHWINDIGKEIT = 2.2f;
     private static final float PADDLE_HORIZONTAL_GESCHWINDIGKEIT = 2.5f;
 
+    private boolean isRunning = false;
     private Handler handler = new Handler();
     private int screenWidth;
     private int screenHeight;
@@ -68,7 +69,6 @@ public class GameView extends View {
         paddleRechts = new Rect();
         paddleUnten = new Rect();
         ball = new Ball();
-        startGame();
     }
 
     @Override
@@ -95,6 +95,9 @@ public class GameView extends View {
         initPaddles();
         initBall();
         invalidate();
+        if(!isRunning) {
+            startGame();
+        }
     }
 
     @Override
@@ -151,10 +154,12 @@ public class GameView extends View {
 
     private void startGame() {
         handler.post(moveBallRunnable);
+        isRunning = true;
     }
 
     private void endGame() {
         handler.removeCallbacks(moveBallRunnable);
+        isRunning = false;
     }
 
     private void initSpielfeld() {
