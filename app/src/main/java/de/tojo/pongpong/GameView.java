@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
@@ -25,7 +26,6 @@ public class GameView extends View {
     private static final float PADDLE_VERTIKAL_GESCHWINDIGKEIT = 2.2f;
     private static final float PADDLE_HORIZONTAL_GESCHWINDIGKEIT = 2.5f;
 
-    private boolean isRunning = false;
     private Handler handler = new Handler();
     private int screenWidth;
     private int screenHeight;
@@ -34,6 +34,7 @@ public class GameView extends View {
     private int benachrichtigungsleisteHeight = 0;
     //erstmal auf 0, für den Fall, dass die Ermittlung in onSizeChanged() nicht funktioniert
     private int navigationsleisteHeight = 0;
+    private boolean isRunning = false;
     private Paint paint;
     private Rect spielfeld;
     private Rect paddleLinks, paddleOben, paddleRechts, paddleUnten;
@@ -44,12 +45,14 @@ public class GameView extends View {
     private int paddleHorizontalLaengeLangeSeite;
     private int abstandZumRandHorizontal;
     private int abstandZumRandVertikal;
+    private float spielfeldWidthMm;
+    private float spielfeldHeightMm;
     private float lastTouchPosX;
     private float lastTouchPosY;
     private final Runnable moveBallRunnable = new Runnable() {
         @Override
         public void run() {
-            ball.move();
+            ball.move(spielfeldWidthMm, spielfeldHeightMm);
 
             invalidate();
 
@@ -173,6 +176,14 @@ public class GameView extends View {
                 benachrichtigungsleisteHeight + abstandZumRandVertikal,
                 screenWidth - abstandZumRandHorizontal,
                 screenHeight - navigationsleisteHeight - abstandZumRandVertikal);
+
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        // dpmm = dots per millimeter
+        // 1 Zoll = 25,4 mm
+        float xdpmm = dm.xdpi / 25.4f;
+        float ydpmm = dm.ydpi / 25.4f;
+        spielfeldWidthMm = spielfeld.width() / xdpmm;
+        spielfeldHeightMm = spielfeld.height() / ydpmm;
     }
 
     private void initPaddles() {

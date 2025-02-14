@@ -13,7 +13,7 @@ public class Ball extends Circle {
 
     private float richtungX;
     private float richtungY;
-    private float geschwindigkeit = 8;
+    private float geschwindigkeit = 0.08f;
     public Ball() {
         genRandomRichtung();
     }
@@ -23,9 +23,15 @@ public class Ball extends Circle {
         genRandomRichtung();
     }
 
-    public void move() {
-        float bewegungX = richtungX * geschwindigkeit;
-        float bewegungY = richtungY * geschwindigkeit;
+    // spielfeldWidthMm und spielfeldHeightMm müssen berücksichtigt werden, damit der Ball
+    // unabhängig von der Bildschirmgröße und Auflösung immer gleich lange von Position A zu
+    // Position B braucht. Sonst würde der Ball bei größeren Bildschirmen oder Bildschirmen mit mehr
+    // Pixeln länger von Position A zu Position B brauchen
+    // TODO: sobald eigene Klasse für spielfeld erstellt wurde: hier vllt das ganze spielfeld und
+    // nicht nur die beiden Werte übergeben
+    public void move(float spielfeldWidthMm, float spielfeldHeightMm) {
+        float bewegungX = richtungX * geschwindigkeit * spielfeldWidthMm;
+        float bewegungY = richtungY * geschwindigkeit * spielfeldHeightMm;
 
         offset(bewegungX, bewegungY, 0);
     }
