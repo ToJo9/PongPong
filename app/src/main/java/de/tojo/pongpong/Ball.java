@@ -29,9 +29,9 @@ public class Ball extends Circle {
     // Pixeln länger von Position A zu Position B brauchen
     // TODO: sobald eigene Klasse für spielfeld erstellt wurde: hier vllt das ganze spielfeld und
     // nicht nur die beiden Werte übergeben
-    public void move(float spielfeldWidthMm, float spielfeldHeightMm) {
-        float bewegungX = richtungX * geschwindigkeit * spielfeldWidthMm;
-        float bewegungY = richtungY * geschwindigkeit * spielfeldHeightMm;
+    public void move(Spielfeld spielfeld) {
+        float bewegungX = richtungX * geschwindigkeit * spielfeld.getWidthMm();
+        float bewegungY = richtungY * geschwindigkeit * spielfeld.getHeightMm();
 
         offset(bewegungX, bewegungY, 0);
     }

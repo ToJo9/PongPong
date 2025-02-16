@@ -21,6 +21,7 @@ public class GameView extends View {
     private static final float PADDLE_HORIZONTAL_LAENGE_KURZE_SEITE_PROZENTUAL = 0.005f;
     private static final float PADDLE_HORIZONTAL_LAENGE_LANGE_SEITE_PROZENTUAL = 0.22f;
     private static final float BALL_RADIUS_PROZENTUAL = 0.01f;
+    // prozentualer Abstand des Spielfelds zum Rand
     private static final float ABSTAND_ZUM_RAND_HORIZONTAL_PROZENTUAL = 0.026f;
     private static final float ABSTAND_ZUM_RAND_VERTIKAL_PROZENTUAL = 0.015f;
     private static final float PADDLE_VERTIKAL_GESCHWINDIGKEIT = 2.2f;
@@ -36,23 +37,22 @@ public class GameView extends View {
     private int navigationsleisteHeight = 0;
     private boolean isRunning = false;
     private Paint paint;
-    private Rect spielfeld;
+    private Spielfeld spielfeld;
     private Rect paddleLinks, paddleOben, paddleRechts, paddleUnten;
     private Ball ball;
     private int paddleVertikalLaengeKurzeSeite;
     private int paddleVertikalLaengeLangeSeite;
     private int paddleHorizontalLaengeKurzeSeite;
     private int paddleHorizontalLaengeLangeSeite;
+    // Abstand des Spielfelds zum Rand
     private int abstandZumRandHorizontal;
     private int abstandZumRandVertikal;
-    private float spielfeldWidthMm;
-    private float spielfeldHeightMm;
     private float lastTouchPosX;
     private float lastTouchPosY;
     private final Runnable moveBallRunnable = new Runnable() {
         @Override
         public void run() {
-            ball.move(spielfeldWidthMm, spielfeldHeightMm);
+            ball.move(spielfeld);
 
             invalidate();
 
@@ -171,71 +171,66 @@ public class GameView extends View {
         abstandZumRandHorizontal = (int) (ABSTAND_ZUM_RAND_HORIZONTAL_PROZENTUAL * screenWidth);
         abstandZumRandVertikal = (int) (ABSTAND_ZUM_RAND_VERTIKAL_PROZENTUAL * screenHeightOhneLeisten);
 
-        spielfeld = new Rect(
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+
+        spielfeld = new Spielfeld(
                 abstandZumRandHorizontal,
                 benachrichtigungsleisteHeight + abstandZumRandVertikal,
                 screenWidth - abstandZumRandHorizontal,
-                screenHeight - navigationsleisteHeight - abstandZumRandVertikal);
-
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        // dpmm = dots per millimeter
-        // 1 Zoll = 25,4 mm
-        float xdpmm = dm.xdpi / 25.4f;
-        float ydpmm = dm.ydpi / 25.4f;
-        spielfeldWidthMm = spielfeld.width() / xdpmm;
-        spielfeldHeightMm = spielfeld.height() / ydpmm;
+                screenHeight - navigationsleisteHeight - abstandZumRandVertikal,
+                dm);
     }
 
     private void initPaddles() {
-        paddleVertikalLaengeKurzeSeite = (int) (PADDLE_VERTIKAL_LAENGE_KURZE_SEITE_PROZENTUAL * spielfeld.width());
-        paddleVertikalLaengeLangeSeite = (int) (PADDLE_VERTIKAL_LAENGE_LANGE_SEITE_PROZENTUAL * spielfeld.height());
-        paddleHorizontalLaengeKurzeSeite = (int) (PADDLE_HORIZONTAL_LAENGE_KURZE_SEITE_PROZENTUAL * spielfeld.height());
-        paddleHorizontalLaengeLangeSeite = (int) (PADDLE_HORIZONTAL_LAENGE_LANGE_SEITE_PROZENTUAL * spielfeld.width());
+        paddleVertikalLaengeKurzeSeite = (int) (PADDLE_VERTIKAL_LAENGE_KURZE_SEITE_PROZENTUAL * spielfeld.getWidth());
+        paddleVertikalLaengeLangeSeite = (int) (PADDLE_VERTIKAL_LAENGE_LANGE_SEITE_PROZENTUAL * spielfeld.getHeight());
+        paddleHorizontalLaengeKurzeSeite = (int) (PADDLE_HORIZONTAL_LAENGE_KURZE_SEITE_PROZENTUAL * spielfeld.getHeight());
+        paddleHorizontalLaengeLangeSeite = (int) (PADDLE_HORIZONTAL_LAENGE_LANGE_SEITE_PROZENTUAL * spielfeld.getWidth());
 
         paddleLinks = new Rect(
-                spielfeld.left - paddleVertikalLaengeKurzeSeite,
-                spielfeld.top + (spielfeld.height() / 2) - (paddleVertikalLaengeLangeSeite / 2),
-                spielfeld.left,
-                spielfeld.bottom - (spielfeld.height() / 2) + (paddleVertikalLaengeLangeSeite / 2));
+                spielfeld.getLeft() - paddleVertikalLaengeKurzeSeite,
+                spielfeld.getTop() + (spielfeld.getHeight() / 2) - (paddleVertikalLaengeLangeSeite / 2),
+                spielfeld.getLeft(),
+                spielfeld.getBottom() - (spielfeld.getHeight() / 2) + (paddleVertikalLaengeLangeSeite / 2));
         paddleOben = new Rect(
-                spielfeld.left + (spielfeld.width() / 2) - (paddleHorizontalLaengeLangeSeite / 2),
-                spielfeld.top - paddleHorizontalLaengeKurzeSeite,
-                spielfeld.right - (spielfeld.width() / 2) + (paddleHorizontalLaengeLangeSeite / 2),
-                spielfeld.top);
+                spielfeld.getLeft() + (spielfeld.getWidth() / 2) - (paddleHorizontalLaengeLangeSeite / 2),
+                spielfeld.getTop() - paddleHorizontalLaengeKurzeSeite,
+                spielfeld.getRight() - (spielfeld.getWidth() / 2) + (paddleHorizontalLaengeLangeSeite / 2),
+                spielfeld.getTop());
         paddleRechts = new Rect(
-                spielfeld.right,
-                spielfeld.top + (spielfeld.height() / 2) - (paddleVertikalLaengeLangeSeite / 2),
-                spielfeld.right + paddleVertikalLaengeKurzeSeite,
-                spielfeld.bottom - (spielfeld.height() / 2) + (paddleVertikalLaengeLangeSeite / 2));
+                spielfeld.getRight(),
+                spielfeld.getTop() + (spielfeld.getHeight() / 2) - (paddleVertikalLaengeLangeSeite / 2),
+                spielfeld.getRight() + paddleVertikalLaengeKurzeSeite,
+                spielfeld.getBottom() - (spielfeld.getHeight() / 2) + (paddleVertikalLaengeLangeSeite / 2));
         paddleUnten = new Rect(
-                spielfeld.left + (spielfeld.width() / 2) - (paddleHorizontalLaengeLangeSeite / 2),
-                spielfeld.bottom,
-                spielfeld.right - (spielfeld.width() / 2) + (paddleHorizontalLaengeLangeSeite / 2),
-                spielfeld.bottom + paddleHorizontalLaengeKurzeSeite);
+                spielfeld.getLeft() + (spielfeld.getWidth() / 2) - (paddleHorizontalLaengeLangeSeite / 2),
+                spielfeld.getBottom(),
+                spielfeld.getRight() - (spielfeld.getWidth() / 2) + (paddleHorizontalLaengeLangeSeite / 2),
+                spielfeld.getBottom() + paddleHorizontalLaengeKurzeSeite);
     }
 
     private void initBall() {
-        float ballRadius = BALL_RADIUS_PROZENTUAL * spielfeld.width();
-        ball = new Ball(spielfeld.left + (spielfeld.width() / 2f), spielfeld.top + (spielfeld.height() / 2f), ballRadius);
+        float ballRadius = BALL_RADIUS_PROZENTUAL * spielfeld.getWidth();
+        ball = new Ball(spielfeld.getLeft() + (spielfeld.getWidth() / 2f), spielfeld.getTop() + (spielfeld.getHeight() / 2f), ballRadius);
     }
 
     private void paddlesImSpielfeldHalten() {
-        if(paddleLinks.top < spielfeld.top) {
-            paddleLinks.offsetTo(paddleLinks.left, spielfeld.top);
-            paddleRechts.offsetTo(paddleRechts.left, spielfeld.top);
+        if(paddleLinks.top < spielfeld.getTop()) {
+            paddleLinks.offsetTo(paddleLinks.left, spielfeld.getTop());
+            paddleRechts.offsetTo(paddleRechts.left, spielfeld.getTop());
         }
-        else if(paddleLinks.bottom > spielfeld.bottom) {
-            paddleLinks.offsetTo(paddleLinks.left, spielfeld.bottom - paddleVertikalLaengeLangeSeite);
-            paddleRechts.offsetTo(paddleRechts.left, spielfeld.bottom - paddleVertikalLaengeLangeSeite);
+        else if(paddleLinks.bottom > spielfeld.getBottom()) {
+            paddleLinks.offsetTo(paddleLinks.left, spielfeld.getBottom() - paddleVertikalLaengeLangeSeite);
+            paddleRechts.offsetTo(paddleRechts.left, spielfeld.getBottom() - paddleVertikalLaengeLangeSeite);
         }
 
-        if(paddleOben.left < spielfeld.left) {
-            paddleOben.offsetTo(spielfeld.left, paddleOben.top);
-            paddleUnten.offsetTo(spielfeld.left, paddleUnten.top);
+        if(paddleOben.left < spielfeld.getLeft()) {
+            paddleOben.offsetTo(spielfeld.getLeft(), paddleOben.top);
+            paddleUnten.offsetTo(spielfeld.getLeft(), paddleUnten.top);
         }
-        else if(paddleOben.right > spielfeld.right) {
-            paddleOben.offsetTo(spielfeld.right - paddleHorizontalLaengeLangeSeite, paddleOben.top);
-            paddleUnten.offsetTo(spielfeld.right - paddleHorizontalLaengeLangeSeite, paddleUnten.top);
+        else if(paddleOben.right > spielfeld.getRight()) {
+            paddleOben.offsetTo(spielfeld.getRight() - paddleHorizontalLaengeLangeSeite, paddleOben.top);
+            paddleUnten.offsetTo(spielfeld.getRight() - paddleHorizontalLaengeLangeSeite, paddleUnten.top);
         }
     }
 }
