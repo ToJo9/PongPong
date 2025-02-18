@@ -24,8 +24,6 @@ public class GameView extends View {
     // prozentualer Abstand des Spielfelds zum Rand
     private static final float ABSTAND_ZUM_RAND_HORIZONTAL_PROZENTUAL = 0.026f;
     private static final float ABSTAND_ZUM_RAND_VERTIKAL_PROZENTUAL = 0.015f;
-    private static final float PADDLE_VERTIKAL_GESCHWINDIGKEIT = 2.2f;
-    private static final float PADDLE_HORIZONTAL_GESCHWINDIGKEIT = 2.5f;
 
     private Handler handler = new Handler();
     private int screenWidth;
@@ -38,12 +36,8 @@ public class GameView extends View {
     private boolean isRunning = false;
     private Paint paint;
     private Spielfeld spielfeld;
-    private Rect paddleLinks, paddleOben, paddleRechts, paddleUnten;
+    private Paddle paddleLinks, paddleOben, paddleRechts, paddleUnten;
     private Ball ball;
-    private int paddleVertikalLaengeKurzeSeite;
-    private int paddleVertikalLaengeLangeSeite;
-    private int paddleHorizontalLaengeKurzeSeite;
-    private int paddleHorizontalLaengeLangeSeite;
     // Abstand des Spielfelds zum Rand
     private int abstandZumRandHorizontal;
     private int abstandZumRandVertikal;
@@ -100,10 +94,10 @@ public class GameView extends View {
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawRect(paddleLinks, paint);
-        canvas.drawRect(paddleOben, paint);
-        canvas.drawRect(paddleRechts, paint);
-        canvas.drawRect(paddleUnten, paint);
+        canvas.drawRect(paddleLinks.getLeft(), paddleLinks.getTop(), paddleLinks.getRight(), paddleLinks.getBottom(), paint);
+        canvas.drawRect(paddleOben.getLeft(), paddleOben.getTop(), paddleOben.getRight(), paddleOben.getBottom(), paint);
+        canvas.drawRect(paddleRechts.getLeft(), paddleRechts.getTop(), paddleRechts.getRight(), paddleRechts.getBottom(), paint);
+        canvas.drawRect(paddleUnten.getLeft(), paddleUnten.getTop(), paddleUnten.getRight(), paddleUnten.getBottom(), paint);
         canvas.drawCircle(ball.cx, ball.cy, ball.radius, paint);
     }
 
@@ -120,21 +114,16 @@ public class GameView extends View {
                 return true;
 
             case MotionEvent.ACTION_MOVE:
-                float deltaX = event.getX() - lastTouchPosX;
-                float deltaY = event.getY() - lastTouchPosY;
+                float touchMoveX = event.getX() - lastTouchPosX;
+                float touchMoveY = event.getY() - lastTouchPosY;
 
                 lastTouchPosX = event.getX();
                 lastTouchPosY = event.getY();
 
-                int moveX = (int) (PADDLE_HORIZONTAL_GESCHWINDIGKEIT * deltaX);
-                int moveY = (int) (PADDLE_VERTIKAL_GESCHWINDIGKEIT * deltaY);
-
-                paddleLinks.offset(0, moveY);
-                paddleOben.offset(moveX, 0);
-                paddleRechts.offset(0, moveY);
-                paddleUnten.offset(moveX, 0);
-
-                paddlesImSpielfeldHalten();
+                paddleLinks.move(touchMoveX, touchMoveY, spielfeld);
+                paddleOben.move(touchMoveX, touchMoveY, spielfeld);
+                paddleRechts.move(touchMoveX, touchMoveY, spielfeld);
+                paddleUnten.move(touchMoveX, touchMoveY, spielfeld);
 
                 invalidate();
                 return true;
@@ -182,27 +171,27 @@ public class GameView extends View {
     }
 
     private void initPaddles() {
-        paddleVertikalLaengeKurzeSeite = (int) (PADDLE_VERTIKAL_LAENGE_KURZE_SEITE_PROZENTUAL * spielfeld.getWidth());
-        paddleVertikalLaengeLangeSeite = (int) (PADDLE_VERTIKAL_LAENGE_LANGE_SEITE_PROZENTUAL * spielfeld.getHeight());
-        paddleHorizontalLaengeKurzeSeite = (int) (PADDLE_HORIZONTAL_LAENGE_KURZE_SEITE_PROZENTUAL * spielfeld.getHeight());
-        paddleHorizontalLaengeLangeSeite = (int) (PADDLE_HORIZONTAL_LAENGE_LANGE_SEITE_PROZENTUAL * spielfeld.getWidth());
+        int paddleVertikalLaengeKurzeSeite = (int) (PADDLE_VERTIKAL_LAENGE_KURZE_SEITE_PROZENTUAL * spielfeld.getWidth());
+        int paddleVertikalLaengeLangeSeite = (int) (PADDLE_VERTIKAL_LAENGE_LANGE_SEITE_PROZENTUAL * spielfeld.getHeight());
+        int paddleHorizontalLaengeKurzeSeite = (int) (PADDLE_HORIZONTAL_LAENGE_KURZE_SEITE_PROZENTUAL * spielfeld.getHeight());
+        int paddleHorizontalLaengeLangeSeite = (int) (PADDLE_HORIZONTAL_LAENGE_LANGE_SEITE_PROZENTUAL * spielfeld.getWidth());
 
-        paddleLinks = new Rect(
+        paddleLinks = new Paddle(
                 spielfeld.getLeft() - paddleVertikalLaengeKurzeSeite,
                 spielfeld.getTop() + (spielfeld.getHeight() / 2) - (paddleVertikalLaengeLangeSeite / 2),
                 spielfeld.getLeft(),
                 spielfeld.getBottom() - (spielfeld.getHeight() / 2) + (paddleVertikalLaengeLangeSeite / 2));
-        paddleOben = new Rect(
+        paddleOben = new Paddle(
                 spielfeld.getLeft() + (spielfeld.getWidth() / 2) - (paddleHorizontalLaengeLangeSeite / 2),
                 spielfeld.getTop() - paddleHorizontalLaengeKurzeSeite,
                 spielfeld.getRight() - (spielfeld.getWidth() / 2) + (paddleHorizontalLaengeLangeSeite / 2),
                 spielfeld.getTop());
-        paddleRechts = new Rect(
+        paddleRechts = new Paddle(
                 spielfeld.getRight(),
                 spielfeld.getTop() + (spielfeld.getHeight() / 2) - (paddleVertikalLaengeLangeSeite / 2),
                 spielfeld.getRight() + paddleVertikalLaengeKurzeSeite,
                 spielfeld.getBottom() - (spielfeld.getHeight() / 2) + (paddleVertikalLaengeLangeSeite / 2));
-        paddleUnten = new Rect(
+        paddleUnten = new Paddle(
                 spielfeld.getLeft() + (spielfeld.getWidth() / 2) - (paddleHorizontalLaengeLangeSeite / 2),
                 spielfeld.getBottom(),
                 spielfeld.getRight() - (spielfeld.getWidth() / 2) + (paddleHorizontalLaengeLangeSeite / 2),
@@ -212,25 +201,5 @@ public class GameView extends View {
     private void initBall() {
         float ballRadius = BALL_RADIUS_PROZENTUAL * spielfeld.getWidth();
         ball = new Ball(spielfeld.getLeft() + (spielfeld.getWidth() / 2f), spielfeld.getTop() + (spielfeld.getHeight() / 2f), ballRadius);
-    }
-
-    private void paddlesImSpielfeldHalten() {
-        if(paddleLinks.top < spielfeld.getTop()) {
-            paddleLinks.offsetTo(paddleLinks.left, spielfeld.getTop());
-            paddleRechts.offsetTo(paddleRechts.left, spielfeld.getTop());
-        }
-        else if(paddleLinks.bottom > spielfeld.getBottom()) {
-            paddleLinks.offsetTo(paddleLinks.left, spielfeld.getBottom() - paddleVertikalLaengeLangeSeite);
-            paddleRechts.offsetTo(paddleRechts.left, spielfeld.getBottom() - paddleVertikalLaengeLangeSeite);
-        }
-
-        if(paddleOben.left < spielfeld.getLeft()) {
-            paddleOben.offsetTo(spielfeld.getLeft(), paddleOben.top);
-            paddleUnten.offsetTo(spielfeld.getLeft(), paddleUnten.top);
-        }
-        else if(paddleOben.right > spielfeld.getRight()) {
-            paddleOben.offsetTo(spielfeld.getRight() - paddleHorizontalLaengeLangeSeite, paddleOben.top);
-            paddleUnten.offsetTo(spielfeld.getRight() - paddleHorizontalLaengeLangeSeite, paddleUnten.top);
-        }
     }
 }

@@ -3,7 +3,6 @@ package de.tojo.pongpong;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 
-//TODO: sobald die Klasse Paddle erstellt wurde: den Kommentar über die Paddles auch in die Klasse Paddle kopieren
 // Die Paddles befinden sich außerhalb des Spielfelds
 // Komposition mit Rect; Vererbung ist nicht möglich, weil Rect final ist
 public class Spielfeld {
