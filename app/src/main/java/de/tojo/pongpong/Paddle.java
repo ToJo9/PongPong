@@ -1,5 +1,7 @@
 package de.tojo.pongpong;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Rect;
 
 // Die Paddles befinden sich außerhalb des Spielfelds
@@ -9,12 +11,14 @@ public class Paddle {
     private static final float PADDLE_VERTIKAL_GESCHWINDIGKEIT = 2.2f;
     private static final float PADDLE_HORIZONTAL_GESCHWINDIGKEIT = 2.5f;
 
-    Rect rect;
+    private final Rect rect;
+    private Paint paint = new Paint();
     // sonst vertikal
-    boolean isHorizontal;
+    private final boolean isHorizontal;
 
     public Paddle(int left, int top, int right, int bottom) {
         rect = new Rect(left, top, right, bottom);
+        paint.setColor(Color.WHITE);
         isHorizontal = rect.width() > rect.height();
     }
 
@@ -66,5 +70,9 @@ public class Paddle {
 
     public int getBottom() {
         return rect.bottom;
+    }
+
+    public Paint getPaint() {
+        return paint;
     }
 }

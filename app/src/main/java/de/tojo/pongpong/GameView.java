@@ -34,7 +34,6 @@ public class GameView extends View {
     //erstmal auf 0, für den Fall, dass die Ermittlung in onSizeChanged() nicht funktioniert
     private int navigationsleisteHeight = 0;
     private boolean isRunning = false;
-    private Paint paint;
     private Spielfeld spielfeld;
     private Paddle paddleLinks, paddleOben, paddleRechts, paddleUnten;
     private Ball ball;
@@ -56,9 +55,6 @@ public class GameView extends View {
 
     public GameView(Context context) {
         super(context);
-
-        paint = new Paint();
-        paint.setColor(Color.WHITE);
     }
 
     @Override
@@ -94,11 +90,11 @@ public class GameView extends View {
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawRect(paddleLinks.getLeft(), paddleLinks.getTop(), paddleLinks.getRight(), paddleLinks.getBottom(), paint);
-        canvas.drawRect(paddleOben.getLeft(), paddleOben.getTop(), paddleOben.getRight(), paddleOben.getBottom(), paint);
-        canvas.drawRect(paddleRechts.getLeft(), paddleRechts.getTop(), paddleRechts.getRight(), paddleRechts.getBottom(), paint);
-        canvas.drawRect(paddleUnten.getLeft(), paddleUnten.getTop(), paddleUnten.getRight(), paddleUnten.getBottom(), paint);
-        canvas.drawCircle(ball.cx, ball.cy, ball.radius, paint);
+        canvas.drawRect(paddleLinks.getLeft(), paddleLinks.getTop(), paddleLinks.getRight(), paddleLinks.getBottom(), paddleLinks.getPaint());
+        canvas.drawRect(paddleOben.getLeft(), paddleOben.getTop(), paddleOben.getRight(), paddleOben.getBottom(), paddleOben.getPaint());
+        canvas.drawRect(paddleRechts.getLeft(), paddleRechts.getTop(), paddleRechts.getRight(), paddleRechts.getBottom(), paddleRechts.getPaint());
+        canvas.drawRect(paddleUnten.getLeft(), paddleUnten.getTop(), paddleUnten.getRight(), paddleUnten.getBottom(), paddleUnten.getPaint());
+        canvas.drawCircle(ball.cx, ball.cy, ball.radius, ball.getPaint());
     }
 
     @Override

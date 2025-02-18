@@ -7,7 +7,7 @@ import android.util.DisplayMetrics;
 // Komposition mit Rect; Vererbung ist nicht möglich, weil Rect final ist
 public class Spielfeld {
 
-    private Rect rect;
+    private final Rect rect;
     private float widthMm;
     private float heightMm;
 

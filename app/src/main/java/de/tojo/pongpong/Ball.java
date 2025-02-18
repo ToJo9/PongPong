@@ -1,5 +1,8 @@
 package de.tojo.pongpong;
 
+import android.graphics.Color;
+import android.graphics.Paint;
+
 import java.util.Random;
 
 public class Ball extends Circle {
@@ -11,15 +14,14 @@ public class Ball extends Circle {
     //TODO: alte berechnung zur berücksichtigung des abprallwinkels: richtungX = randomizer.nextFloat() * (1 - (2 * (WINKEL / 90))) + (WINKEL / 90);
     private static final float MAX_ABPRALLWINKEL_GRAD = 80f;
 
+    private Paint paint = new Paint();
     private float richtungX;
     private float richtungY;
     private float geschwindigkeit = 0.08f;
-    public Ball() {
-        genRandomRichtung();
-    }
 
     public Ball(float cx, float cy, float radius) {
         super(cx, cy, radius);
+        paint.setColor(Color.WHITE);
         genRandomRichtung();
     }
 
@@ -50,5 +52,9 @@ public class Ball extends Circle {
         if(randomizer.nextBoolean()) {
             richtungY *= -1;
         }
+    }
+
+    public Paint getPaint() {
+        return paint;
     }
 }
