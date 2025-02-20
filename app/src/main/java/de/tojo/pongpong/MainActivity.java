@@ -25,7 +25,7 @@ public class MainActivity extends AppCompatActivity implements OnClickListener {
             return insets;
         });
 
-        Button startButton = findViewById(R.id.startButton);
+        Button startButton = findViewById(R.id.start_button);
         startButton.setOnClickListener(this);
     }
 

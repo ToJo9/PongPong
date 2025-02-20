@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Farben sind alphabetisch geordnet -->
 <resources>
     <color name="black">#FF000000</color>
+    <color name="hintergrund">#FF101010</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

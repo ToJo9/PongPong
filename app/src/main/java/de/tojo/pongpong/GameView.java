@@ -7,12 +7,14 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
+import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowInsets;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 
 public class GameView extends View {
 
@@ -53,8 +55,10 @@ public class GameView extends View {
         }
     };
 
-    public GameView(Context context) {
-        super(context);
+    public GameView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+
+        setBackgroundColor(ContextCompat.getColor(getContext(), R.color.hintergrund));
     }
 
     @Override
