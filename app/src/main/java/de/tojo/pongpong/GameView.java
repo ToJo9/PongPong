@@ -48,6 +48,7 @@ public class GameView extends View {
         @Override
         public void run() {
             ball.move(spielfeld);
+            trefferErkennen();
 
             invalidate();
 
@@ -201,5 +202,9 @@ public class GameView extends View {
     private void initBall() {
         float ballRadius = BALL_RADIUS_PROZENTUAL * spielfeld.getWidth();
         ball = new Ball(spielfeld.getLeft() + (spielfeld.getWidth() / 2f), spielfeld.getTop() + (spielfeld.getHeight() / 2f), ballRadius);
+    }
+
+    private void trefferErkennen() {
+
     }
 }
