@@ -36,6 +36,7 @@ public class GameView extends View {
     //erstmal auf 0, für den Fall, dass die Ermittlung in onSizeChanged() nicht funktioniert
     private int navigationsleisteHeight = 0;
     private boolean isRunning = false;
+    private int punktzahl = 0;
     private Spielfeld spielfeld;
     private Paddle paddleLinks, paddleOben, paddleRechts, paddleUnten;
     private Ball ball;
@@ -48,7 +49,7 @@ public class GameView extends View {
         @Override
         public void run() {
             ball.move(spielfeld);
-            trefferErkennen();
+            kollisionenErkennen();
 
             invalidate();
 
@@ -204,7 +205,15 @@ public class GameView extends View {
         ball = new Ball(spielfeld.getLeft() + (spielfeld.getWidth() / 2f), spielfeld.getTop() + (spielfeld.getHeight() / 2f), ballRadius);
     }
 
-    private void trefferErkennen() {
+    private void kollisionenErkennen() {
+        ball.kollisionErkennen(paddleLinks);
+        ball.kollisionErkennen(paddleOben);
+        ball.kollisionErkennen(paddleRechts);
+        ball.kollisionErkennen(paddleUnten);
+    }
 
+    private void kollisionMitPaddle() {
+        punktzahl++;
+        //richtung aendern aufrufen
     }
 }

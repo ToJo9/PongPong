@@ -17,7 +17,7 @@ public class Ball extends Circle {
     private Paint paint = new Paint();
     private float richtungX;
     private float richtungY;
-    private float geschwindigkeit = 0.08f;
+    private float geschwindigkeit = 0.06f;
 
     public Ball(float cx, float cy, float radius) {
         super(cx, cy, radius);
@@ -25,17 +25,76 @@ public class Ball extends Circle {
         genRandomRichtung();
     }
 
-    // spielfeldWidthMm und spielfeldHeightMm müssen berücksichtigt werden, damit der Ball
+    // spielfeld.widthMm und spielfeld.heightMm müssen berücksichtigt werden, damit der Ball
     // unabhängig von der Bildschirmgröße und Auflösung immer gleich lange von Position A zu
     // Position B braucht. Sonst würde der Ball bei größeren Bildschirmen oder Bildschirmen mit mehr
     // Pixeln länger von Position A zu Position B brauchen
     // TODO: sobald eigene Klasse für spielfeld erstellt wurde: hier vllt das ganze spielfeld und
     // nicht nur die beiden Werte übergeben
     public void move(Spielfeld spielfeld) {
-        float bewegungX = richtungX * geschwindigkeit * spielfeld.getWidthMm();
-        float bewegungY = richtungY * geschwindigkeit * spielfeld.getHeightMm();
+        float bewegungX = richtungX * geschwindigkeit * (spielfeld.getWidthMm() + spielfeld.getHeightMm());
+        float bewegungY = richtungY * geschwindigkeit * (spielfeld.getWidthMm() + spielfeld.getHeightMm());
 
         offset(bewegungX, bewegungY, 0);
+    }
+
+    public void kollisionErkennen(Paddle paddle) {
+        // Abstand zwischen der Mitte des Balls und der nächsten Stelle des Paddles auf x-Ebene
+        // berechnen
+
+        float abstandZwischenBallCenterUndPaddleX;
+        float abstandZwischenCentersX = cx - paddle.getCenterX();
+
+        // ueberpruefen, ob Ball links vom Paddle ist
+        if(abstandZwischenCentersX < -(paddle.getWidth() / 2f)) {
+            abstandZwischenBallCenterUndPaddleX = abstandZwischenCentersX + (paddle.getWidth() / 2f);
+        }
+        // ueberpruefen, ob Ball rechts vom Paddle ist
+        else if(abstandZwischenCentersX > (paddle.getWidth() / 2f)) {
+            abstandZwischenBallCenterUndPaddleX = abstandZwischenCentersX - (paddle.getWidth() / 2f);
+        }
+        // wenn Ball im Bereich des Paddles ist
+        else {
+            abstandZwischenBallCenterUndPaddleX = 0;
+        }
+
+        // Abstand zwischen der Mitte des Balls und der nächsten Stelle des Paddles auf y-Ebene
+        // berechnen
+
+        float abstandZwischenBallCenterUndPaddleY;
+        float abstandZwischenCentersY = cy - paddle.getCenterY();
+
+        // ueberpruefen, ob Ball hoeher als Paddle ist
+        if(abstandZwischenCentersY < -(paddle.getHeight() / 2f)) {
+            abstandZwischenBallCenterUndPaddleY = abstandZwischenCentersY + (paddle.getHeight() / 2f);
+        }
+        // ueberpruefen, ob Ball niedriger als Paddle ist
+        else if(abstandZwischenCentersY > (paddle.getHeight() / 2f)) {
+            abstandZwischenBallCenterUndPaddleY = abstandZwischenCentersY - (paddle.getHeight() / 2f);
+        }
+        // wenn Ball im Bereich des Paddles ist
+        else {
+            abstandZwischenBallCenterUndPaddleY = 0;
+        }
+
+        // allgemeinen Abstand zwischen der Mitte des Balls und der nächsten Stelle des Paddles
+        // berechnen
+
+        // Satz des Pythagoras
+        // TODO: wie kann ich die beiden Zeilen mit Math.pow() buendig schreiben?
+        float abstandZwischenBallCenterUndPaddle = (float) (Math.sqrt(
+                Math.pow(abstandZwischenBallCenterUndPaddleX, 2) +
+                        Math.pow(abstandZwischenBallCenterUndPaddleY, 2)
+        ));
+        float abstandZwischenBallUndPaddle = abstandZwischenBallCenterUndPaddle - radius;
+
+        if(abstandZwischenBallUndPaddle <= 0) {
+            //Treffer
+        }
+    }
+
+    private void richtungAendern() {
+        //TODO
     }
 
     private void genRandomRichtung() {

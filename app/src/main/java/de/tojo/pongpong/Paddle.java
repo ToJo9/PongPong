@@ -56,6 +56,22 @@ public class Paddle {
         }
     }
 
+    public int getWidth() {
+        return rect.width();
+    }
+
+    public int getHeight() {
+        return rect.height();
+    }
+
+    public int getCenterX() {
+        return rect.centerX();
+    }
+
+    public int getCenterY() {
+        return rect.centerY();
+    }
+
     public int getLeft() {
         return rect.left;
     }
