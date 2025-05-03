@@ -206,14 +206,26 @@ public class GameView extends View {
     }
 
     private void kollisionenErkennen() {
-        ball.kollisionErkennen(paddleLinks);
-        ball.kollisionErkennen(paddleOben);
-        ball.kollisionErkennen(paddleRechts);
-        ball.kollisionErkennen(paddleUnten);
+        if (ball.kollisionErkennen(paddleLinks)) {
+            kollisionMitPaddle();
+        }
+        if (ball.kollisionErkennen(paddleOben)) {
+            kollisionMitPaddle();
+        }
+        if (ball.kollisionErkennen(paddleRechts)) {
+            kollisionMitPaddle();
+        }
+        if (ball.kollisionErkennen(paddleUnten)) {
+            kollisionMitPaddle();
+        }
     }
 
+    /*
+    TODO: Es gibt gerade auch Punkte, wenn man den Ball mit dem Paddle nur streift und er dann
+    sofort aus dem Spielfeld fliegt. Eigentlich sollte es dafür keinen Punkt mehr geben
+     */
     private void kollisionMitPaddle() {
         punktzahl++;
-        //richtung aendern aufrufen
+        ball.richtungAendern();
     }
 }

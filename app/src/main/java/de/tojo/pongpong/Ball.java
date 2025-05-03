@@ -18,6 +18,14 @@ public class Ball extends Circle {
     private float richtungX;
     private float richtungY;
     private float geschwindigkeit = 0.06f;
+    /*
+    abstandZwischenBallCenterUndPaddleY und abstandZwischenBallUndPaddle könnten lokale Variablen
+    sein. abstandZwischenBallCenterUndPaddleX wird aber global benötigt. Damit es einheitlich ist,
+    sind alle global
+     */
+    private float abstandZwischenBallCenterUndPaddleX;
+    private float abstandZwischenBallCenterUndPaddleY;
+    private float abstandZwischenBallUndPaddle;
 
     public Ball(float cx, float cy, float radius) {
         super(cx, cy, radius);
@@ -38,11 +46,10 @@ public class Ball extends Circle {
         offset(bewegungX, bewegungY, 0);
     }
 
-    public void kollisionErkennen(Paddle paddle) {
+    public boolean kollisionErkennen(Paddle paddle) {
         // Abstand zwischen der Mitte des Balls und der nächsten Stelle des Paddles auf x-Ebene
         // berechnen
 
-        float abstandZwischenBallCenterUndPaddleX;
         float abstandZwischenCentersX = cx - paddle.getCenterX();
 
         // ueberpruefen, ob Ball links vom Paddle ist
@@ -61,7 +68,6 @@ public class Ball extends Circle {
         // Abstand zwischen der Mitte des Balls und der nächsten Stelle des Paddles auf y-Ebene
         // berechnen
 
-        float abstandZwischenBallCenterUndPaddleY;
         float abstandZwischenCentersY = cy - paddle.getCenterY();
 
         // ueberpruefen, ob Ball hoeher als Paddle ist
@@ -86,15 +92,43 @@ public class Ball extends Circle {
                 Math.pow(abstandZwischenBallCenterUndPaddleX, 2) +
                         Math.pow(abstandZwischenBallCenterUndPaddleY, 2)
         ));
-        float abstandZwischenBallUndPaddle = abstandZwischenBallCenterUndPaddle - radius;
+        abstandZwischenBallUndPaddle = abstandZwischenBallCenterUndPaddle - radius;
 
         if(abstandZwischenBallUndPaddle <= 0) {
-            //Treffer
+            return true;
+        }
+        else {
+            return false;
         }
     }
 
-    private void richtungAendern() {
-        //TODO
+    public void richtungAendern() {
+        /*
+        Reflexionsformel: R = D - 2 * dot(D, N) * N
+        R = reflektierter Vektor (Ausfallsvektor)
+        D = Einfallsrichtungsvektor
+                Vektor: (richtungX, richtungY)
+        N = Normalenvektor (normalisierter Vektor von Mitte des Balls zum Kollisionspunkt mit dem
+            Paddle)
+                summeAbstaende = | abstandZwischenBallCenterUndPaddleX | +
+                                 | abstandZwischenBallCenterUndPaddleY |
+                Vektor: (abstandZwischenBallCenterUndPaddleX / summeAbstaende,
+                        abstandZwischenBallCenterUndPaddleY / summeAbstaende)
+        dot() = Skalarprodukt
+         */
+        float summeAbstaende = Math.abs(abstandZwischenBallCenterUndPaddleX) +
+                Math.abs(abstandZwischenBallCenterUndPaddleY);
+
+        float nX = abstandZwischenBallCenterUndPaddleX / summeAbstaende;
+        float nY = abstandZwischenBallCenterUndPaddleY / summeAbstaende;
+
+        float skalarprodukt = richtungX * nX + richtungY * nY;
+
+        float rX = richtungX - 2 * skalarprodukt * nX;
+        float rY = richtungY - 2 * skalarprodukt * nY;
+
+        richtungX = rX;
+        richtungY = rY;
     }
 
     private void genRandomRichtung() {
