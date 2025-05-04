@@ -23,8 +23,24 @@ public class Ball extends Circle {
     sein. abstandZwischenBallCenterUndPaddleX wird aber global benötigt. Damit es einheitlich ist,
     sind alle global
      */
+    /*
+    wenn Ballmitte links vom Paddle ist: negativ
+    wenn Ballmitte und Paddle sich auf der x-Ebene ueberschneiden: 0
+    wenn Ballmitte rechts vom Paddle ist: positiv
+     */
     private float abstandZwischenBallCenterUndPaddleX;
+    /*
+    wenn Ballmitte hoeher als Paddle ist: negativ
+    wenn Ballmitte und Paddle sich auf der y-Ebene ueberschneiden: 0
+    wenn Ballmitte niedriger als Paddle ist: positiv
+     */
     private float abstandZwischenBallCenterUndPaddleY;
+    /*
+    wenn Ball und Paddle sich nicht beruehren: positiv
+    wenn Ball und Paddle sich am Rand beruehren: 0
+    wenn Ball und Paddle sich ueberschneiden: negativ (Wert gibt negativ an, wie weit Ball im Paddle
+    ist)
+     */
     private float abstandZwischenBallUndPaddle;
 
     public Ball(float cx, float cy, float radius) {
@@ -100,6 +116,10 @@ public class Ball extends Circle {
         else {
             return false;
         }
+    }
+
+    public void ueberschneidungMitPaddleVerhindern() {
+        //TODO
     }
 
     public void richtungAendern() {

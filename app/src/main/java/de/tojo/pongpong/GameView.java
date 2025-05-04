@@ -2,9 +2,6 @@ package de.tojo.pongpong;
 
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
@@ -229,6 +226,7 @@ public class GameView extends View {
     sofort aus dem Spielfeld fliegt. Eigentlich sollte es dafür keinen Punkt mehr geben
      */
     private void kollisionMitPaddle() {
+        ball.ueberschneidungMitPaddleVerhindern();
         punktzahl++;
         ball.richtungAendern();
     }
