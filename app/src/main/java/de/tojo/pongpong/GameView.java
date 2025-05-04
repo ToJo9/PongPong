@@ -208,15 +208,19 @@ public class GameView extends View {
     private void kollisionenErkennen() {
         if (ball.kollisionErkennen(paddleLinks)) {
             kollisionMitPaddle();
+            return;
         }
         if (ball.kollisionErkennen(paddleOben)) {
             kollisionMitPaddle();
+            return;
         }
         if (ball.kollisionErkennen(paddleRechts)) {
             kollisionMitPaddle();
+            return;
         }
         if (ball.kollisionErkennen(paddleUnten)) {
             kollisionMitPaddle();
+            return;
         }
     }
 
